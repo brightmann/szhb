@@ -27,13 +27,21 @@ const handleSvg = (config) => {
   fileLoaderRule.exclude = /\.svg$/i;
 };
 
+const isGithubPages = process.env.GITHUB_PAGES === 'true';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   pageExtensions: ['ts', 'tsx', 'mdx'],
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
-  output: 'standalone',
+  output: isGithubPages ? 'export' : 'standalone',
+  ...(isGithubPages && {
+    basePath: '/szhb',
+    assetPrefix: '/szhb',
+    images: { loader: 'custom', loaderFile: './image-loader.js' },
+    trailingSlash: true
+  }),
   experimental: {
     optimizePackageImports: ['framer-motion']
   },
