@@ -32,6 +32,13 @@ interface BlogDetailProps {
   params: { slug: string };
 }
 
+/** 静态导出时预渲染所有文章页 */
+export function generateStaticParams() {
+  return [...postsMapping.keys()].map((slug) => ({
+    slug: slug.replace(/^\/posts\//, '')
+  }));
+}
+
 interface GenerateMetadataProps {
   params: { slug: string };
 }
