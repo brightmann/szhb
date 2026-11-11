@@ -2,8 +2,6 @@ import { ImageWrap } from '@/components/ImageWrap';
 import { getAllCoverPicture } from '@/config/picture';
 import type { CoverPicture } from '@/config/picture';
 import { metadataConfig } from '@/config/picture';
-import { AGENT } from '@/middlewares/constant';
-import type { ServerComponentProps } from '@/middlewares/interface';
 import { cn } from '@/utils';
 
 export const metadata = metadataConfig;
@@ -93,20 +91,20 @@ const GalleryMobile = (props: { allCoverPicture: CoverPicture[] }) => {
   );
 };
 
-export default async function Gallery(props: ServerComponentProps) {
-  const { viewport } = props.searchParams;
-
+export default async function Gallery() {
   const allCoverPicturePromise = await getAllCoverPicture();
   const allCoverPicture = await Promise.all(allCoverPicturePromise.map(async (post) => post));
-  console.log(allCoverPicture);
 
   return (
     <div className={cn('flex justify-center')}>
-      {viewport === AGENT.MOBILE ? (
-        <GalleryMobile allCoverPicture={allCoverPicture} />
-      ) : (
+      {/* 桌面端布局，小屏隐藏（静态托管没有 middleware，改为 CSS 响应式切换） */}
+      <div className='max-sm:hidden'>
         <GalleryDesktop allCoverPicture={allCoverPicture} />
-      )}
+      </div>
+      {/* 移动端布局，大屏隐藏 */}
+      <div className='sm:hidden'>
+        <GalleryMobile allCoverPicture={allCoverPicture} />
+      </div>
     </div>
   );
 }
