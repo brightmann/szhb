@@ -1,4 +1,3 @@
-'use server';
 
 import type { ImageProps } from 'next/image';
 
