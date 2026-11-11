@@ -43,7 +43,8 @@ const BreadcrumbInfo = (props: { children?: React.ReactNode; content: React.Reac
 export const LayoutBreadcrumb = (props: LayoutBreadcrumbProps) => {
   const { className, routerMapping } = props;
 
-  const nestedPathList = useBreadcrumb();
+  const originalPathList = useBreadcrumb();
+  const nestedPathList = originalPathList?.filter((item) => item.href !== '/posts/page');
 
   /**
    *  根据路由名称获取标题
@@ -51,6 +52,8 @@ export const LayoutBreadcrumb = (props: LayoutBreadcrumbProps) => {
    * @returns 标题化后的字符串
    */
   const titleize = (pathname: string) => {
+    const paginationPage = pathname.match(/^\/posts\/page\/(\d+)\/?$/)?.[1];
+    if (paginationPage) return `第 ${paginationPage} 页`;
     return routerMapping.get(pathname)?.text ?? pathname;
   };
 
